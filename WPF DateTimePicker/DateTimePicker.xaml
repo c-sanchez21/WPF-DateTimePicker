@@ -4,14 +4,35 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPF_DateTimePicker"
-             mc:Ignorable="d" 
-             >
-    <StackPanel Orientation="Horizontal">
-        <TextBox Name="txtDateTime" Text="2021-06-10 15:22" Height="21" PreviewMouseUp="txtDateTime_PreviewMouseUp" PreviewKeyDown="txtDateTime_PreviewKeyDown" LostFocus="txtDateTime_LostFocus"/>
-        <ToggleButton Name="CalendarButton" Width="10"/>
-        <Popup IsOpen="{Binding ElementName=CalendarButton, Path=IsChecked}" 
-               StaysOpen="False" >
-            <Calendar x:Name="calView" SelectedDatesChanged="calView_SelectedDatesChanged"/>
+             mc:Ignorable="d"
+             d:DesignHeight ="30" d:DesignWidth ="200">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="txtDateTime" 
+                 Grid.Column="0"
+                 VerticalContentAlignment="Center"
+                 Padding="4,0,0,0"
+                 PreviewMouseUp="txtDateTime_PreviewMouseUp"
+                 PreviewKeyDown="txtDateTime_PreviewKeyDown"                 
+                 LostFocus="txtDateTime_LostFocus"/>
+        <ToggleButton x:Name="CalendarButton"
+                      Grid.Column="1"
+                      Width="30">
+            <TextBlock  FontFamily="Segoe MDL2 Assets"
+                        Text="&#xE787;"
+                        FontSize="14"
+                        VerticalAlignment="Center"/>
+        </ToggleButton>
+        <Popup IsOpen="{Binding ElementName=CalendarButton, Path=IsChecked}"
+               PlacementTarget="{Binding ElementName=CalendarButton}"
+               StaysOpen="False"
+               AllowsTransparency="True">
+            <Border BorderBrush="LightGray" BorderThickness="1" Background="White">
+                <Calendar x:Name="calView" SelectedDatesChanged="calView_SelectedDatesChanged"/>
+            </Border>
         </Popup>
-    </StackPanel>
+    </Grid>
 </UserControl>

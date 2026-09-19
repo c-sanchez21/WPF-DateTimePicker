@@ -18,76 +18,79 @@ namespace WPF_DateTimePicker
     /// <summary>
     /// Interaction logic for DateTimePicker.xaml
     /// </summary>
-    public partial class DateTimePicker : UserControl, INotifyPropertyChanged
+    public partial class DateTimePicker : UserControl
     {
+        private const string DateFormat = "yyyy-MMM-dd ddd HH:mm";
+
+        #region Constructor(s)
         public DateTimePicker()
         {
             InitializeComponent();
         }
+        #endregion
 
         #region Properties
-        public DateTime? SelectedDate
-        {
-            get
-            {
-                return (DateTime?)GetValue(SelectedDateProperty);
-            }
-            set
-            {
-                SetValue(SelectedDateProperty, value);
-                NotifyPropertyChanged();
-            }
-        }
 
         public static readonly DependencyProperty SelectedDateProperty =
-            DependencyProperty.Register("SelectedDate", typeof(Nullable<DateTime>), typeof(DateTimePicker),
-                new PropertyMetadata(DateTime.Now, new PropertyChangedCallback(OnSelectedDateChanged),
-                    new CoerceValueCallback(CoerceDate)));
+            DependencyProperty.Register(
+                nameof(SelectedDate),
+                typeof(DateTime?),
+                typeof(DateTimePicker),
+                new PropertyMetadata(DateTime.Now, new PropertyChangedCallback(OnSelectedDateChanged),CoerceDate));
 
-        private const string DateFormat = "yyyy-MMM-dd ddd HH:mm";
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        public DateTime? SelectedDate
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            get => (DateTime?)GetValue(SelectedDateProperty);
+            set => SetValue(SelectedDateProperty, value);            
+        }        
 
-        public static void OnSelectedDateChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        public static void OnSelectedDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!(o is DateTimePicker dtp)) return; //Return if o is not a DateTimePicker
-            if (e == null || e.NewValue == null)
-            { //If null value date
-                dtp.txtDateTime.Text = "";
-            }
+            if (d is not DateTimePicker dtp) return;
+
+            if (e.NewValue is not DateTime date)
+                dtp.txtDateTime.Text = string.Empty;
             else
             {
-                DateTime d = (DateTime)e.NewValue;
-                dtp.txtDateTime.Text = d.ToString(DateFormat);
-                dtp.calView.SelectedDate = d;
-                dtp.calView.DisplayDate = d;
+                dtp.txtDateTime.Text = date.ToString(DateFormat);
+                dtp.calView.SelectedDate = date;
+                dtp.calView.DisplayDate = date;
             }
         }
         #endregion
         private static object CoerceDate(DependencyObject d, object value)
         {
-            //Method reserved for future use in validating date (i.e Min/Max date)
+            //Method reserved for future use in validating date (i.e restricing date to a Min/Max)
             return value;
         }
 
         private void calView_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
         {
             CalendarButton.IsChecked = false;
-            if (!calView.SelectedDate.HasValue) return;
-            DateTime d = calView.SelectedDate.Value;
-            DateTime? t = SelectedDate; //Preserve time component
-            SelectedDate = new DateTime(d.Year, d.Month, d.Day, t.Value.Hour, t.Value.Minute, t.Value.Second);
+            
+            //Syntax for:
+            //if(!calView.SelectedDate.HasVaule) return;
+             //DateTime selectedDate = calView.SelectedDate.Value 
+            if (calView.SelectedDate is not { } selectedDate) return;
+
+
+            //Preserve time component - Default to midnight if SelectedDate is null
+            DateTime currentTime = SelectedDate ?? DateTime.Today;            
+
+            SelectedDate = new DateTime(
+                selectedDate.Year,
+                selectedDate.Month,
+                selectedDate.Day,
+                currentTime.Hour,
+                currentTime.Minute,
+                currentTime.Second
+                );            
         }
 
         private void txtDateTime_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            int idx = txtDateTime.SelectionStart;
             //Focuses on the date component that was clicked on
-            SelectDateComponent(idx); 
+            SelectDateComponent(txtDateTime.SelectionStart);            
         }
 
         /// <summary>
@@ -100,16 +103,16 @@ namespace WPF_DateTimePicker
             if (idx >= DateFormat.Length) idx = DateFormat.Length - 1;
 
             //Find first letter of the DateFormat that is being selected
-            char c = DateFormat.Substring(idx, 1)[0];
+            //char c = DateFormat.Substring(idx, 1)[0];
+            char c = DateFormat[idx];
             int first = DateFormat.IndexOf(c); 
 
             //Get the length of the component (i.e HH or yyyy)
             int last = DateFormat.LastIndexOf(c) + 1;
-            int len = last - first;
-
+            
             //Select the date component
             txtDateTime.Focus();
-            txtDateTime.Select(first, len);
+            txtDateTime.Select(first,last - first);
         }
 
         private void txtDateTime_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -134,17 +137,9 @@ namespace WPF_DateTimePicker
                     MoveRight(idx);
                     break;
                 //In case user inputs a digit
-                case Key.D0:
-                case Key.D1:
-                case Key.D2:
-                case Key.D3:
-                case Key.D4:
-                case Key.D5:
-                case Key.D6:
-                case Key.D7:
-                case Key.D8:
-                case Key.D9:
-                    e.Handled = false;
+                case >= Key.D0 and <= Key.D9:
+                case >= Key.NumPad0 and <= Key.NumPad9:
+                    e.Handled = false; //Allow user to input digits                
                     break;
             }
         }
@@ -152,7 +147,7 @@ namespace WPF_DateTimePicker
         private void MoveLeft(int idx)
         {
             //Check out of bounds
-            if (idx < 0 || idx >= DateFormat.Length) return;
+            if (idx <= 0 || idx >= DateFormat.Length) return;
 
             //DateFormat char that we start with
             char first = DateFormat[idx];
@@ -161,14 +156,14 @@ namespace WPF_DateTimePicker
             int prev = idx - 1;
 
             //Keep moving left until a new DateFormat letter is found or prev < 0
-            while (prev >= 0 && (DateFormat[prev] == first || !Char.IsLetter(DateFormat[prev])))
+            while (prev >= 0 && (DateFormat[prev] == first || !char.IsLetter(DateFormat[prev])))
                 prev--;
 
             //Select previous control if prev < 0
             if (prev < 0)
                 this.MoveFocus(new TraversalRequest(FocusNavigationDirection.Previous));
             //Otherwise select the previous Date/Time component
-            else SelectDateComponent(prev);
+            else SelectDateComponent(prev); 
         }
 
         private void MoveRight(int idx)
@@ -184,7 +179,7 @@ namespace WPF_DateTimePicker
 
             //Keep moving right until a new DateFormat letter is found or next is out of bounds
             int max = DateFormat.Length; 
-            while (next < max && (DateFormat[next] == first || !Char.IsLetter(DateFormat[next])))
+            while (next < max && (DateFormat[next] == first || !char.IsLetter(DateFormat[next])))
                 next++;
 
             if (next == max)
@@ -192,47 +187,31 @@ namespace WPF_DateTimePicker
             else SelectDateComponent(next);
         }
 
-        private DateTime AddToDate(int idx, int val)
-        {
-            //Get the date being displayed
-            DateTime d = DateTime.Parse(txtDateTime.Text);
+        private DateTime? AddToDate(int idx, int val)
+        {            
+            //If parsing fails return revert to existing SelectedDate
+            if (!DateTime.TryParse(txtDateTime.Text, out DateTime d))
+                return SelectedDate;
 
             //First letter of the DateFormat selected
             char c = DateFormat[idx];
 
-            //TODO: Need a try/catch handler for invalid dates;
-            switch (c)
+            return c switch
             {
-                case 'y':
-                    d = d.AddYears(val);
-                    break;
-                case 'M':
-                    d = d.AddMonths(val);
-                    break;
-                case 'd':
-                    d = d.AddDays(val);
-                    break;
-                case 'h':
-                case 'H':
-                    d = d.AddHours(val);
-                    break;
-                case 'm':
-                    d = d.AddMinutes(val);
-                    break;
-                case 's':
-                    d = d.AddSeconds(val);
-                    break;
-                case 'f':
-                    d = d.AddMilliseconds(val);
-                    break;
-            }
-            return d;
+                'y' => d.AddYears(val),
+                'M' => d.AddMonths(val),
+                'd' => d.AddDays(val),
+                'h' or 'H' => d.AddHours(val),
+                'm' => d.AddMinutes(val),
+                's' => d.AddSeconds(val),
+                'f' => d.AddMilliseconds(val),
+                _ => d
+            };
         }
 
         private void txtDateTime_LostFocus(object sender, RoutedEventArgs e)
-        {
-            DateTime d;
-            if (DateTime.TryParse(txtDateTime.Text, out d))
+        {            
+            if (DateTime.TryParse(txtDateTime.Text, out DateTime d))
                 SelectedDate = d;
             else txtDateTime.Undo();
         }
