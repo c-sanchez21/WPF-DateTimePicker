@@ -1,0 +1,54 @@
+﻿<Window x:Class="WPF_DateTimePicker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_DateTimePicker"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="375" Width="200" Foreground="White" SizeToContent="WidthAndHeight" Name="this">
+    <Window.Resources>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </Window.Resources>
+    
+    <!-- Background -->
+    <Window.Background>
+        <RadialGradientBrush GradientOrigin=".5,.5">
+            <GradientStop Color="#FF191919" Offset="0"/>
+            <GradientStop Color="#FF030303" Offset="1"/>
+        </RadialGradientBrush>
+    </Window.Background>
+    
+    <StackPanel>
+        <GroupBox Header="DatePicker">
+            <DatePicker SelectedDate="{Binding Path=MyDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </GroupBox>
+        
+        <!-- Date Time Picker with Text -->
+        <GroupBox Header="DateTimePicker - Calendar + Text">
+            <StackPanel Orientation="Horizontal">
+                <!-- Experiment with creating DateTime Picker Control-->
+                <!-- Modifying time resets the date -->
+                <DatePicker x:Name="dtpDate" SelectedDate="{Binding Path=MyDate, Mode=TwoWay}"/>
+                <TextBox x:Name="txtTime" Width="80" Text="{Binding Path=MyDate, 
+                        StringFormat=HH:mm:ss, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </GroupBox>
+        
+        <!-- Custom User Control --> 
+        <GroupBox Header="Custom - Usercontrol">
+            <local:DateTimePicker SelectedDate="{Binding ElementName=this, Path=MyDate,
+                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </GroupBox>
+        
+        <!-- Calendar -->
+        <GroupBox Header="Calendar">
+            <Calendar x:Name="myCalender" SelectedDate="{Binding Path=MyDate, Mode=TwoWay}"
+                      DisplayDate="{Binding Path=MyDate, Mode=TwoWay}"/>
+        </GroupBox>
+        
+        <!-- Display Date Button -->
+        <Button Margin="5" Name="btnDisplayDate" Click="btnDisplayDate_Click">Display MyDate</Button>
+    </StackPanel>
+</Window>

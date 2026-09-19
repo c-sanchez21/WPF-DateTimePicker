@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31402.337
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF DateTimePicker", "WPF DateTimePicker\WPF DateTimePicker.csproj", "{A13B87FF-D57E-4C2C-9807-2BF24DD54AFB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A13B87FF-D57E-4C2C-9807-2BF24DD54AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A13B87FF-D57E-4C2C-9807-2BF24DD54AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A13B87FF-D57E-4C2C-9807-2BF24DD54AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A13B87FF-D57E-4C2C-9807-2BF24DD54AFB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C07B1E62-B8FD-4A61-9C4C-0F9F21B9BAF4}
+	EndGlobalSection
+EndGlobal

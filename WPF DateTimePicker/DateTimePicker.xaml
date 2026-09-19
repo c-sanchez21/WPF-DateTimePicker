@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="WPF_DateTimePicker.DateTimePicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPF_DateTimePicker"
+             mc:Ignorable="d" 
+             >
+    <StackPanel Orientation="Horizontal">
+        <TextBox Name="txtDateTime" Text="2021-06-10 15:22" Height="21" PreviewMouseUp="txtDateTime_PreviewMouseUp" PreviewKeyDown="txtDateTime_PreviewKeyDown" LostFocus="txtDateTime_LostFocus"/>
+        <ToggleButton Name="CalendarButton" Width="10"/>
+        <Popup IsOpen="{Binding ElementName=CalendarButton, Path=IsChecked}" 
+               StaysOpen="False" >
+            <Calendar x:Name="calView" SelectedDatesChanged="calView_SelectedDatesChanged"/>
+        </Popup>
+    </StackPanel>
+</UserControl>
