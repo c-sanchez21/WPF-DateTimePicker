@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WPF_DateTimePicker
+namespace WPF_DateTimePickerControl
 {
     /// <summary>
     /// Interaction logic for DateTimePicker.xaml

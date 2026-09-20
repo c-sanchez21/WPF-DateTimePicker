@@ -3,8 +3,12 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows7.0</TargetFramework>
-    <RootNamespace>WPF_DateTimePicker</RootNamespace>
+    <RootNamespace>WPF_DateTimePicker.Demo</RootNamespace>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WPF-DateTimePickerControl\WPF-DateTimePickerControl.csproj" />
+  </ItemGroup>
 
 </Project>
