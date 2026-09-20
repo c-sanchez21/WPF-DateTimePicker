@@ -24,6 +24,7 @@
             <TextBlock  FontFamily="Segoe MDL2 Assets"
                         Text="&#xE787;"
                         FontSize="14"
+                        Foreground="Black"
                         VerticalAlignment="Center"/>
         </ToggleButton>
         <Popup IsOpen="{Binding ElementName=CalendarButton, Path=IsChecked}"

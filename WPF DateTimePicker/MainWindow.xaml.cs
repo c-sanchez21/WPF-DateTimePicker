@@ -23,31 +23,20 @@ namespace WPF_DateTimePicker.Demo
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        DateTime myDate = new DateTime(2021, 3, 21, 12, 30, 0);
+        DateTime _myDate = DateTime.Now;
         public DateTime MyDate
         {
-            get
-            {
-                return myDate;
-            }
+            get => _myDate;
+            
             set
             {
-                myDate = value;
-                NotifyPropertyChanged();
+                if (_myDate != value)
+                {
+                    _myDate= value;
+                    NotifyPropertyChanged();
+                }                
             }
-        }
-        public DateTime? SelectedDate
-        {
-            get
-            {
-                return dtpDate.SelectedDate;
-            }
-            set
-            {
-                dtpDate.SelectedDate = value;
-                NotifyPropertyChanged();
-            }
-        }
+        }        
 
         public MainWindow()
         {
@@ -57,9 +46,12 @@ namespace WPF_DateTimePicker.Demo
         }
         private void btnDisplayDate_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(String.Format("MyDate:= {0:yyyy-MMM-dd ddd, HH:mm:ss}", MyDate));
+            MessageBox.Show(
+                $"The currently selected date and time is:\n\n{MyDate:yyyy-MMM-dd ddd, HH:mm:ss}",
+                "Date Verified",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
-
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {

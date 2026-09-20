@@ -6,50 +6,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_DateTimePicker"
         mc:Ignorable="d"
-        Title="MainWindow" Height="375" Width="200" Foreground="White" SizeToContent="WidthAndHeight" Name="this">
+        Title="DateTimePicker Demo" Height="500" Width="550" 
+        WindowStartupLocation="CenterScreen" Background="#1E1E1E" Name="this">
     <Window.Resources>
-        <Style TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="White"/>
+        <!-- Minimalist styling for the demo elements -->
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Foreground" Value="#9E9E9E"/>
+            <Setter Property="BorderBrush" Value="#3F3F46"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="15"/>
         </Style>
     </Window.Resources>
-    
-    <!-- Background -->
-    <Window.Background>
-        <RadialGradientBrush GradientOrigin=".5,.5">
-            <GradientStop Color="#FF191919" Offset="0"/>
-            <GradientStop Color="#FF030303" Offset="1"/>
-        </RadialGradientBrush>
-    </Window.Background>
-    
-    <StackPanel>
-        <GroupBox Header="DatePicker">
-            <DatePicker SelectedDate="{Binding Path=MyDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="WPF Custom DateTimePicker" FontSize="20" FontWeight="SemiBold" 
+                   Margin="0,0,0,15" Foreground="White" HorizontalAlignment="Center"/>
+
+        <!-- Interactive Control Demo -->
+        <GroupBox Grid.Row="1" Header="Interactive Control">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Select Date &amp; Time:" VerticalAlignment="Center" Margin="0,0,15,0"/>
+
+                <!-- Custom Control (WPF-DateTimePickerControl) -->
+                <dtp:DateTimePicker Grid.Column="1" VerticalAlignment="Center" Height="26"
+                                    SelectedDate="{Binding MyDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
         </GroupBox>
-        
-        <!-- Date Time Picker with Text -->
-        <GroupBox Header="DateTimePicker - Calendar + Text">
-            <StackPanel Orientation="Horizontal">
-                <!-- Experiment with creating DateTime Picker Control-->
-                <!-- Modifying time resets the date -->
-                <DatePicker x:Name="dtpDate" SelectedDate="{Binding Path=MyDate, Mode=TwoWay}"/>
-                <TextBox x:Name="txtTime" Width="80" Text="{Binding Path=MyDate, 
-                        StringFormat=HH:mm:ss, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- Live Data Binding Feedback -->
+        <GroupBox Grid.Row="2" Header="Data Binding Verification">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                <TextBlock Text="Currently Bound Value (MyDate Property):" 
+                           Foreground="#9E9E9E" FontSize="12" Margin="0,0,0,8" HorizontalAlignment="Center"/>
+
+                <TextBlock Text="{Binding Path=MyDate, StringFormat='{}{0:yyyy-MMM-dd ddd HH:mm:ss}'}" 
+                           FontSize="18" FontWeight="Bold" Foreground="#4DA8DA" HorizontalAlignment="Center"/>
             </StackPanel>
         </GroupBox>
-        
-        <!-- Custom User Control --> 
-        <GroupBox Header="Custom - Usercontrol">
-            <dtp:DateTimePicker SelectedDate="{Binding ElementName=this, Path=MyDate,
-                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        </GroupBox>
-        
-        <!-- Calendar -->
-        <GroupBox Header="Calendar">
-            <Calendar x:Name="myCalender" SelectedDate="{Binding Path=MyDate, Mode=TwoWay}"
-                      DisplayDate="{Binding Path=MyDate, Mode=TwoWay}"/>
-        </GroupBox>
-        
-        <!-- Display Date Button -->
-        <Button Margin="5" Name="btnDisplayDate" Click="btnDisplayDate_Click">Display MyDate</Button>
-    </StackPanel>
+
+        <!-- Action Button -->
+        <Button Grid.Row="3" Margin="0,10,0,0" Padding="15,6" HorizontalAlignment="Right"
+                Background="#3F3F46" Foreground="White" BorderThickness="0" Cursor="Hand"
+                Name="btnDisplayDate" Click="btnDisplayDate_Click" Content="Show Alert"/>
+    </Grid>
 </Window>
+    

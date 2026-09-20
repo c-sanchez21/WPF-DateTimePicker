@@ -20,7 +20,7 @@ namespace WPF_DateTimePickerControl
     /// </summary>
     public partial class DateTimePicker : UserControl
     {
-        private const string DateFormat = "yyyy-MMM-dd ddd HH:mm";
+        private const string DateFormat = "yyyy-MMM-dd ddd HH:mm:ss";
 
         #region Constructor(s)
         public DateTimePicker()
