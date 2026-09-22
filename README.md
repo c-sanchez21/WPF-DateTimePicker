@@ -1,5 +1,3 @@
-# WPF-DateTimePicker
-A simple WPF DateTimePicker Control that allows you to change both Date & Time. It also allows the use of the keyboard to change the values. 
 # WPF Custom DateTimePicker
 
 A modern, lightweight, and fully custom `DateTimePicker` control for Windows Presentation Foundation (WPF). This control solves the classic WPF limitation of needing separate components for date and time by combining them into a single, keyboard-navigable, and null-safe interface with robust two-way data binding.
