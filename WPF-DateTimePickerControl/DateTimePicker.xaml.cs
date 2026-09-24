@@ -193,6 +193,9 @@ namespace WPF_DateTimePickerControl
             if (!DateTime.TryParse(txtDateTime.Text, out DateTime d))
                 return SelectedDate;
 
+            //Out of Bounds check. 
+            if (idx >= txtDateTime.Text.Length || idx < 0) return d;
+
             //First letter of the DateFormat selected
             char c = DateFormat[idx];
 
